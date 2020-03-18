@@ -5,26 +5,74 @@ import threading
 
 
 def Colision():
+    global ordre
     while 1:
-            listeColision = []
-            for n in range(0, nbCarre) :
-                listeColision.append(0)
+        listeColision = []
+        for n in range(0, nbCarre) :
+            listeColision.append(list())
+            listeColision[n].append(n)
 
-            colision = Canevas.find_overlapping(Canevas.coords(Carre[0])[0],Canevas.coords(Carre[0])[1],Canevas.coords(Carre[0])[2],Canevas.coords(Carre[0])[3])
-            if len(colision)==2 :
-                colle = colision[1]-1
-                [xmin,ymin,xmax,ymax] = Canevas.coords(Carre[0])
-                Canevas.coords(Carre[colle],xmin,ymax-6,xmax,ymax+2*TailleCarre-6)
-                listeColision[1] = colle
-            for n in range(1,nbCarre):
-                colision = Canevas.find_overlapping(Canevas.coords(Carre[listeColision[n]])[0],Canevas.coords(Carre[listeColision[n]])[1],Canevas.coords(Carre[listeColision[n]])[2],Canevas.coords(Carre[listeColision[n]])[3])
-                if len(colision)==3 :
-                    if colision[0] != listeColision[n]+1 and colision[0] != listeColision[n-1]+1  : colle = colision[0]-1
-                    elif colision[1] != listeColision[n]+1 and colision[1] != listeColision[n-1]+1  : colle = colision[1]-1
-                    elif colision[2] != listeColision[n]+1 and colision[2] != listeColision[n-1]+1  : colle = colision[2]-1
-                    [xmin,ymin,xmax,ymax] = Canevas.coords(Carre[listeColision[n]])
-                    Canevas.coords(Carre[colle],xmin,ymax-6,xmax,ymax+2*TailleCarre-6)
-                    listeColision[n+1] = colle
+
+        for n in range(0, nbCarre) :
+            colision = Canevas.find_overlapping(Canevas.coords(Carre[n])[0], Canevas.coords(Carre[n])[1], Canevas.coords(Carre[n])[2], Canevas.coords(Carre[n])[3])
+            if len(colision) == 3 :
+                if colision[0]-1 == n :
+                    [xmin1, ymin1, xmax1, ymax1] = Canevas.coords(Carre[colision[1] - 1])
+                    [xmin2, ymin2, xmax2, ymax2] = Canevas.coords(Carre[colision[2] - 1])
+                    [xmin, ymin, xmax, ymax] = Canevas.coords(Carre[colision[0] - 1])
+                    if ymin1 > ymin2 :
+                        listeColision[n].append(colision[1]-1)
+                        Canevas.coords(Carre[colision[1]-1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                    if ymin2 > ymin1:
+                        listeColision[n].append(colision[2]-1)
+                        Canevas.coords(Carre[colision[2] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                if colision[1]-1 == n :
+                    [xmin1, ymin1, xmax1, ymax1] = Canevas.coords(Carre[colision[0] - 1])
+                    [xmin2, ymin2, xmax2, ymax2] = Canevas.coords(Carre[colision[2] - 1])
+                    [xmin, ymin, xmax, ymax] = Canevas.coords(Carre[colision[1] - 1])
+                    if ymin1 > ymin2 :
+                        listeColision[n].append(colision[0]-1)
+                        Canevas.coords(Carre[colision[0] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                    if ymin2 > ymin1:
+                        listeColision[n].append(colision[2]-1)
+                        Canevas.coords(Carre[colision[2] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                if colision[2]-1 == n :
+                    [xmin1, ymin1, xmax1, ymax1] = Canevas.coords(Carre[colision[0]-1])
+                    [xmin2, ymin2, xmax2, ymax2] = Canevas.coords(Carre[colision[1]-1])
+                    [xmin, ymin, xmax, ymax] = Canevas.coords(Carre[colision[2]-1])
+                    if ymin1 > ymin2 :
+                        listeColision[n].append(colision[0]-1)
+                        Canevas.coords(Carre[colision[0] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                    if ymin2 > ymin1 :
+                        listeColision[n].append(colision[1]-1)
+                        Canevas.coords(Carre[colision[1] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+            if len(colision) == 2 :
+                if colision[0]-1 == n :
+                    [xmin1, ymin1, xmax1, ymax1] = Canevas.coords(Carre[colision[1] - 1])
+                    [xmin, ymin, xmax, ymax] = Canevas.coords(Carre[colision[0] - 1])
+                    if ymin1 > ymin :
+                        listeColision[n].append(colision[1]-1)
+                        Canevas.coords(Carre[colision[1] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+                if colision[1]-1 == n :
+                    [xmin1, ymin1, xmax1, ymax1] = Canevas.coords(Carre[colision[0] - 1])
+                    [xmin, ymin, xmax, ymax] = Canevas.coords(Carre[colision[1] - 1])
+                    if ymin1 > ymin :
+                        listeColision[n].append(colision[0]-1)
+                        Canevas.coords(Carre[colision[0] - 1], xmin, ymax - 6, xmax, ymax + 2 * TailleCarre - 6)
+
+            # On fusionne chaque liste
+        for i in range(0, nbCarre) :
+            for n in range(0, nbCarre) :
+                suivant = listeColision[n][-1]
+                if listeColision[n][0] != suivant :
+                    del listeColision[n][-1]
+                    listeColision[n] = listeColision[n] + listeColision[suivant]
+
+            # Mise en memoire
+        ordre = list(listeColision)
+
+
+
 
 
 
@@ -50,21 +98,10 @@ def Clic(event):
 
 def Drag(event):
     """ Gestion de l'événement bouton gauche enfoncé """
-
-    ordre = list()
     X = event.x
     Y = event.y
     n = 0
     i = 0
-    premierTrouve = False
-    ordre.append(premierCarre)
-
-    for n in range(0, len(listeColision)):
-        if listeColision[n] == premierCarre and premierTrouve == False :
-            premierTrouve = True
-        if listeColision[n] != 0 and listeColision[n] != premierCarre and premierTrouve == True :
-            ordre.append(listeColision[n])
-
     for n in range (0,nbCarre) :
         if DETECTION_CLIC_SUR_OBJET[n] == True:
             # limite de l'objet dans la zone graphique
@@ -77,15 +114,17 @@ def Drag(event):
             Ymin = Y-TailleCarre
             Xmax = X+TailleCarre
             Ymax = Y+TailleCarre
+
             # mise à jour de la position de l'objet (drag)
-            for n in range (0, len(ordre)) :
-                Canevas.coords(Carre[ordre[n]],Xmin,Ymin + n*2*TailleCarre-n*6,Xmax,Ymax + n*2*TailleCarre-n*6)
+            for i in range (0, len(ordre[n])) :
+                Canevas.coords(Carre[ordre[n][i]],Xmin,Ymin + i*2*TailleCarre-i*6,Xmax,Ymax + i*2*TailleCarre-i*6)
 
 
 
 
 premierCarre = 0
 listeColision = list()
+
 nbCarre = 10
 Carre = list()
 DETECTION_CLIC_SUR_OBJET = list()
