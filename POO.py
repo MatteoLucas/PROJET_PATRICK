@@ -8,6 +8,7 @@ from PIL import ImageTk
 def Colision():
     global ordre
     while 1:
+
         nbCarreActuel = nbCarre
         listeColision = []
         for n in range(0, nbCarreActuel) :
@@ -17,6 +18,7 @@ def Colision():
         for n in range(0, nbCarreActuel) :
             [Xmin, Ymin] = Canevas.coords(Carre[n])
             colision = Canevas.find_overlapping(Xmin, Ymin, Xmin + L, Ymin + H)
+
 
             # Colision de 3 blocs
             if len(colision) == 3 :
@@ -46,8 +48,6 @@ def Colision():
                         Canevas.coords(Carre[colision[1]-1], xmin3, ymin3 + H - 6)
 
             # Colision de 2 blocs
-            print(colision)
-            print(len(colision))
             if len(colision) == 2 :
                 [xmin1, ymin1] = Canevas.coords(Carre[colision[0] - 1])
                 [xmin, ymin] = Canevas.coords(Carre[colision[1] - 1])
@@ -120,31 +120,82 @@ def Drag(event):
 
 def Executer():
     print('Execution')
+    print(Blocs)
 
-def Print():
+def Afficher():
     global nbCarre
-    Carre.append(Canevas.create_image(0, 0, anchor=NW, image=image3))
+    C = Print()
+    Carre.append(C.new())
+    Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
-    Convertion[len(Convertion) + 1] = 'Print'
-    e1 = Entry(Canevas)
-    Text = Canevas.create_window(150, 40, window=e1)
-
+    Convertion[len(Convertion)+1] = 'Bloc'
+    #Z = Zone()
+    #Carre.append(Z.new())
+    #Blocs.append(Z)
 
 def Vide():
     global nbCarre
     Carre.append(Canevas.create_image(0, 0, anchor=NW, image=image2))
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
-    Convertion[len(Convertion)+1] = 'Vide'
+    Convertion[len(Convertion)+1] = 'Violet'
 
 
 
-# Creation des variables
+
+#Création des classe:
+class Print:
+    id = 1
+    toPrint = ""
+    def new(self):
+        print("nouveau bloc print")
+        return Canevas.create_image(0, 0, anchor=NW, image=image3)
+
+
+class Zone:
+    id = 50
+    toPrint = ""
+    def new(self):
+        print("nouvelle zone de texte")
+        return Canevas.create_window(150, 40, window=e1)
+
+
+class If:
+    id = 2
+
+    def new(self):
+        Carre.append(Canevas.create_image(0, 0, anchor=NW, image=image))
+
+class Else:
+    id = 3
+
+    def new(self):
+        Carre.append(Canevas.create_image(0, 0, anchor=NW, image=image2))
+
+class While:
+    id = 4
+
+    def new(self):
+        Carre.append(Canevas.create_image(0, 0, anchor=NW, image=image3))
+
+class For:
+    id = 5
+
+class Variable:
+    id = 6
+    nom = "a définir"
+    value = "a définir"
+
+
+
+
 listeColision = list()
 nbCarre = 1
 Carre = list()
+Blocs = list()
 DETECTION_CLIC_SUR_OBJET = list()
+
 
 
 # Création de la fenêtre principale
@@ -156,8 +207,8 @@ Mafenetre.title("Projet PatricK")
 Executer = Button(Mafenetre, text ='Exécuter', command = Executer)
 Executer.pack(side = LEFT, padx = 10, pady = 10)
 
-Print = Button(Mafenetre, text ='Bloc', command = Print)
-Print.pack(side = LEFT, padx = 10, pady = 10)
+Afficher = Button(Mafenetre, text ='Afficher', command = Afficher)
+Afficher.pack(side = LEFT, padx = 10, pady = 10)
 
 Vide = Button(Mafenetre, text ='Vide', command = Vide)
 Vide.pack(side = LEFT, padx = 10, pady = 10)
@@ -175,8 +226,10 @@ L = 160
 
 # ouverture des images
 image = ImageTk.PhotoImage(file ='images/bloc-debut.png')
-image2 = ImageTk.PhotoImage(file ='images/Bloc-vide.png')
+image2 = ImageTk.PhotoImage(file ='images/bloc-vide.png')
 image3 = ImageTk.PhotoImage(file ='images/bloc-print.png')
+e1 = Entry(Canevas)
+
 
 # Creation du bloc de demarrage
 Carre.append(Canevas.create_image(300, 0, anchor=NW, image=image))
