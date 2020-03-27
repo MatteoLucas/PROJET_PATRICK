@@ -1,5 +1,5 @@
 lines = int(input("how many lines in the code ?"))
-f = open("monFichierScratch.py","w+")
+f = open("monFichierScratch.py", "w+")
 tab = 0
 
 for i in range(0,lines):
@@ -15,6 +15,4 @@ for i in range(0,lines):
         f.write("\n"+toWrite)
 
 f.close()
-
-import monFichierScratch
 

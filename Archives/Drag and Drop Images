@@ -174,9 +174,9 @@ H = 70
 L = 160
 
 # ouverture des images
-image = ImageTk.PhotoImage(file ='images/bloc-debut.png')
-image2 = ImageTk.PhotoImage(file ='images/Bloc-vide.png')
-image3 = ImageTk.PhotoImage(file ='images/bloc-print.png')
+image = ImageTk.PhotoImage(file ='../images/bloc-debut.png')
+image2 = ImageTk.PhotoImage(file ='../images/bloc-vide.png')
+image3 = ImageTk.PhotoImage(file ='../images/bloc-print.png')
 
 # Creation du bloc de demarrage
 Carre.append(Canevas.create_image(300, 0, anchor=NW, image=image))

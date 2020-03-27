@@ -87,18 +87,21 @@ def ClicD(event):
 
 def ClicG(event):
     """ Gestion de l'événement Clic gauche """
-
+    '''Probleme : Quand on clique sur c1 event.x et event.y on les valeurs pour c1 et non pour Canevas'''
     # position du pointeur de la souris
     X = event.x
     Y = event.y
-
+    print(X,Y)
     for n in range(0,nbCarre) :
         [xmin,ymin] = Canevas.coords(Carre[n])
+
         xmax = xmin + L
         ymax = ymin + H
         if xmin<=X<=xmax and ymin<=Y<=ymax:
             DETECTION_CLIC_SUR_OBJET[n] = True
         else: DETECTION_CLIC_SUR_OBJET[n] = False
+
+    print(DETECTION_CLIC_SUR_OBJET)
 
 def Drag(event):
     """ Gestion de l'événement bouton gauche enfoncé """
@@ -129,10 +132,7 @@ def Afficher():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
-    Convertion[len(Convertion)+1] = 'Bloc'
-    #Z = Zone()
-    #Carre.append(Z.new())
-    #Blocs.append(Z)
+
 
 def Vide():
     global nbCarre
@@ -150,15 +150,17 @@ class Print:
     toPrint = ""
     def new(self):
         print("nouveau bloc print")
-        return Canevas.create_image(0, 0, anchor=NW, image=image3)
-
-
-class Zone:
-    id = 50
-    toPrint = ""
-    def new(self):
-        print("nouvelle zone de texte")
-        return Canevas.create_window(150, 40, window=e1)
+        c1 = Canvas(Canevas, width=L, height=H, bg='white')
+        e1 = Entry(Canevas)
+        c1.create_image(0, 0, anchor=NW, image=image3)
+        c1.create_window(30, 30, anchor=NW,window=e1)
+        # La méthode bind() permet de lier un événement avec une fonction
+        c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
+        c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
+        c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
+        return Canevas.create_window(2, 2, anchor=NW, window=c1)
+        c1.focus_set()
+        c1.pack(padx=10, pady=10)
 
 
 class If:
@@ -221,18 +223,18 @@ Canevas = Canvas(Mafenetre,width=Largeur,height=Hauteur,bg ='white')
 
 
 # Taille des blocs
+L = 200
 H = 70
-L = 160
+
 
 # ouverture des images
 image = ImageTk.PhotoImage(file ='images/bloc-debut.png')
 image2 = ImageTk.PhotoImage(file ='images/bloc-vide.png')
 image3 = ImageTk.PhotoImage(file ='images/bloc-print.png')
-e1 = Entry(Canevas)
 
 
 # Creation du bloc de demarrage
-Carre.append(Canevas.create_image(300, 0, anchor=NW, image=image))
+Carre.append(Canevas.create_image(600, 600, anchor=NW, image=image))
 DETECTION_CLIC_SUR_OBJET.append(False)
 Convertion = {1:'Debut'}
 

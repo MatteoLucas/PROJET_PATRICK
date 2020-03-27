@@ -53,7 +53,7 @@ Canevas = Canvas(Mafenetre,width=Largeur,height=Hauteur,bg ='white')
 
 H = 50
 L = 160
-image = ImageTk.PhotoImage(file ='images/rouge.jpg')
+image = ImageTk.PhotoImage(file ='../images/rouge.jpg')
 Carre = Canevas.create_image(0, 0, anchor=NW, image=image)
 
 # Création d'un objet graphique
