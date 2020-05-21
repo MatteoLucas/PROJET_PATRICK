@@ -1,6 +1,8 @@
 from tkinter import *
 import threading
 from tkinter import Entry
+from tkinter import simpledialog
+
 import os
 import subprocess
 
@@ -84,11 +86,11 @@ def ClicD(event):
     X = event.x
     Y = event.y
 
-    for n in range(0,nbCarre) :
+    for n in range(1,nbCarre) :
         [xmin,ymin] = Canevas.coords(Carre[n])
         xmax = xmin + L
         ymax = ymin + H
-        if xmin <= X <= xmax and ymin <= Y <= ymax:
+        if xmin <= X <= xmax and ymin <= Y <= ymax :
             for i in range(0, len(ordre[n])):
                 Canevas.coords(ordre[n][i] + 1, -500, -500)
 
@@ -165,6 +167,7 @@ def Write(b):
         tab = tab - 1
 
     #f.close()
+
 def Save():
     global f
     f = open("monFichierScratch.py", "w+")
@@ -184,6 +187,7 @@ def blocPrint():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
+    valeur.append('')
 
 def blocIf():
     global nbCarre
@@ -194,6 +198,7 @@ def blocIf():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
+    valeur.append('')
 
 def blocVar():
     global nbCarre
@@ -204,6 +209,7 @@ def blocVar():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
+    valeur.append('')
 
 def blocElse():
     global nbCarre
@@ -214,7 +220,7 @@ def blocElse():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
-
+    valeur.append('')
 
 def blocEndOfLoop():
     global nbCarre
@@ -225,8 +231,22 @@ def blocEndOfLoop():
     Blocs.append(C)
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
-    Convertion[len(Convertion) + 1] = 'enfOfLoop'
+    valeur.append('')
 
+def takeUserInput():
+    for n in range(0, nbCarre):
+        if DETECTION_CLIC_SUR_OBJET[n] == True:
+            if valeur[n] == '' :
+                userInput = simpledialog.askstring("Ajouter une valeur", "Valeur :")
+                if userInput == None : userInput = ''
+                valeur[n] = userInput
+            elif valeur[n] != '' :
+                userInput = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + valeur[n] + ", Nouvelle valeur :")
+                if userInput == None: userInput = valeur[n]
+                valeur[n] = userInput
+
+    for n in range(0, nbCarre):
+        print(valeur[n])
 
 genId = 0
 
@@ -314,6 +334,7 @@ class Variable:
 listeColision = list()
 nbCarre = 1
 Carre = list()
+valeur = list()
 Blocs = list()
 DETECTION_CLIC_SUR_OBJET = list()
 
@@ -323,27 +344,28 @@ Mafenetre = Tk()
 Mafenetre.title("Projet PatricK")
 
 
-# Creation des boutons
-Executer = Button(Mafenetre, text ='Exécuter', command = Executer)
-Executer.pack(side = LEFT, padx = 10, pady = 10)
+# Creation du menu
 
-Afficher = Button(Mafenetre, text ='Print', command = blocPrint)
-Afficher.pack(side = LEFT, padx = 10, pady = 10)
+menubar = Menu(Mafenetre)
 
-Vide = Button(Mafenetre, text ='Fin de boucle', command = blocEndOfLoop)
-Vide.pack(side = LEFT, padx = 10, pady = 10)
+menu1 = Menu(menubar, tearoff=0)
+menu1.add_command(label='Exécuter', command=Executer)
+menu1.add_command(label='Save', command=Save)
+menubar.add_cascade(label="Actions", menu=menu1)
 
-ifBtn = Button(Mafenetre, text ='If', command = blocIf)
-ifBtn.pack(side = LEFT, padx = 10, pady = 10)
+menu2 = Menu(menubar, tearoff=0)
+menu2.add_command(label="Afficher", command=blocPrint)
+menu2.add_separator()
+menu2.add_command(label="Si", command=blocIf)
+menu2.add_command(label="Sinon", command=blocElse)
+menu2.add_command(label='Fin de boucle', command=blocEndOfLoop)
+menu2.add_separator()
+menu2.add_command(label='Variable', command=blocVar)
+menubar.add_cascade(label="Blocs", menu=menu2)
 
-saveBtn = Button(Mafenetre, text ='Save', command = Save)
-saveBtn.pack(side = RIGHT, padx = 10, pady = 10)
+menubar.add_command(label = "Ajouter une valeur", command = takeUserInput)
 
-varBtn = Button(Mafenetre, text ='Var', command = blocVar)
-varBtn.pack(side = LEFT, padx = 10, pady = 10)
-
-elseBtn = Button(Mafenetre, text ='Else', command = blocElse)
-elseBtn.pack(side = LEFT, padx = 10, pady = 10)
+Mafenetre.config(menu=menubar)
 
 
 # Création d'un widget Canvas
@@ -369,7 +391,7 @@ imgEndOfLoop = ImageTk.PhotoImage(file ='images/bloc-endOfLoop.png')
 # Creation du bloc de demarrage
 Carre.append(Canevas.create_image(600, 600, anchor=NW, image=imgDeb))
 DETECTION_CLIC_SUR_OBJET.append(False)
-Convertion = {1:'Debut'}
+valeur.append('')
 
 
 
