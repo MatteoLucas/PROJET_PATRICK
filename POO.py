@@ -76,8 +76,6 @@ def Colision():
             # Mise en memoire
         ordre = list(listeColision)
 
-
-
 def ClicD(event):
     """ Gestion de l'événement Clic droit """
 
@@ -222,6 +220,28 @@ def blocElse():
     nbCarre = len(Carre)
     valeur.append('')
 
+def blocFor():
+    global nbCarre
+    global genId
+    genId += 1
+    C = For()
+    Carre.append(C.new())
+    Blocs.append(C)
+    DETECTION_CLIC_SUR_OBJET.append(False)
+    nbCarre = len(Carre)
+    valeur.append('')
+
+def blocWhile():
+    global nbCarre
+    global genId
+    genId += 1
+    C = While()
+    Carre.append(C.new())
+    Blocs.append(C)
+    DETECTION_CLIC_SUR_OBJET.append(False)
+    nbCarre = len(Carre)
+    valeur.append('')
+
 def blocEndOfLoop():
     global nbCarre
     global genId
@@ -235,8 +255,8 @@ def blocEndOfLoop():
 
 def takeUserInput():
     for n in range(0, nbCarre):
-        if DETECTION_CLIC_SUR_OBJET[n] == True:
-            if valeur[n] == '' :
+        if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n-1] != 3 and Blocs[n-1] != 5:
+            if valeur[n] == '':
                 userInput = simpledialog.askstring("Ajouter une valeur", "Valeur :")
                 if userInput == None : userInput = ''
                 valeur[n] = userInput
@@ -303,7 +323,7 @@ class While:
     def __init__(self):
         self.bId = genId
     def new(self):
-        return Canevas.create_image(0, 0, anchor=NW, image=imgVide)
+        return Canevas.create_image(0, 0, anchor=NW, image=imgWhile)
     def getEntry(self):
         return self.entry
     def getGenId(self):
@@ -315,7 +335,7 @@ class For:
     def __init__(self):
         self.bId = genId
     def new(self):
-        return Canevas.create_image(0, 0, anchor=NW, image=imgVide)
+        return Canevas.create_image(0, 0, anchor=NW, image=imgFor)
     def getEntry(self):
         return self.entry
     def getGenId(self):
@@ -347,7 +367,6 @@ Mafenetre.title("Projet PatricK")
 
 
 # Creation du menu
-
 menubar = Menu(Mafenetre)
 
 menu1 = Menu(menubar, tearoff=0)
@@ -361,6 +380,8 @@ menu2.add_separator()
 menu2.add_command(label="Si", command=blocIf)
 menu2.add_command(label="Sinon", command=blocElse)
 menu2.add_command(label='Fin de boucle', command=blocEndOfLoop)
+menu2.add_command(label='Pour', command=blocFor)
+menu2.add_command(label='Tant que', command=blocWhile)
 menu2.add_separator()
 menu2.add_command(label='Variable', command=blocVar)
 menubar.add_cascade(label="Blocs", menu=menu2)
@@ -388,6 +409,8 @@ imgPrint = ImageTk.PhotoImage(file ='images/bloc-print.png')
 imgIf = ImageTk.PhotoImage(file ='images/bloc-if.png')
 imgElse = ImageTk.PhotoImage(file ='images/bloc-else.png')
 imgEndOfLoop = ImageTk.PhotoImage(file ='images/bloc-endOfLoop.png')
+imgFor = ImageTk.PhotoImage(file ='images/bloc-for.png')
+imgWhile = ImageTk.PhotoImage(file ='images/bloc-while.png')
 
 
 # Creation du bloc de demarrage
