@@ -127,7 +127,6 @@ def Drag(event):
 
 
 def Executer():
-    print('Execution')
     global f
     f = open("monFichierScratch.py", "w+")
     o = ordre[0]
@@ -173,6 +172,12 @@ def Write(b):
     #f.close()
 def Save():
     global f
+    f = open("monFichierScratch.py", "w+")
+    o = ordre[0]
+    for i in o:
+        for b in Blocs:
+            if b.getGenId() == i:
+                Write(b)
     f.close()
 
 def blocPrint():
@@ -233,167 +238,81 @@ genId = 0
 #Création des classe:
 class Print:
     id = 1
-    bId = 0
+    entry = ""
     def __init__(self):
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
-
-
     def new(self):
-        print("nouveau bloc print")
-        self.c1.create_image(0, 0, anchor=NW, image=image3)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
-
+        return Canevas.create_image(0, 0, anchor=NW, image=imgPrint)
     def getEntry(self):
-        #print(self.e1.get())
-        return self.e1.get()
+        return self.entry
     def getGenId(self):
         return self.bId
 
 class endOfLoop:
     id = 5
     def __init__(self):
-        print(genId)
         self.bId = genId
     def new(self):
-        return Canevas.create_image(0, 0, anchor=NW, image=image6)
+        return Canevas.create_image(0, 0, anchor=NW, image=imgEndOfLoop)
     def getGenId(self):
         return self.bId
 
-
 class If:
     id = 2
+    entry = ""
     def __init__(self):
-        print(genId)
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
-
     def new(self):
-        print("nouveau bloc if")
-        self.c1.create_image(0, 0, anchor=NW, image=image4)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
-
+        return Canevas.create_image(0, 0, anchor=NW, image=imgIf)
     def getEntry(self):
-        return self.e1.get()
+        return self.entry
     def getGenId(self):
         return self.bId
 
 class Else:
     id = 3
     def __init__(self):
-        print(genId)
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
 
     def new(self):
-        print("nouveau bloc if")
-        self.c1.create_image(0, 0, anchor=NW, image=image5)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
+        return Canevas.create_image(0, 0, anchor=NW, image=imgElse)
 
-    def getEntry(self):
-        return self.e1.get()
     def getGenId(self):
         return self.bId
 
 class While:
     id = 4
+    entry = ""
     def __init__(self):
-        print(genId)
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
-
     def new(self):
-        print("nouveau bloc if")
-        self.c1.create_image(0, 0, anchor=NW, image=image2)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
-
+        return Canevas.create_image(0, 0, anchor=NW, image=imgVide)
     def getEntry(self):
-        return self.e1.get()
+        return self.entry
     def getGenId(self):
         return self.bId
 
 class For:
     id = 6
+    entry = ""
     def __init__(self):
-        print(genId)
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
-
     def new(self):
-        print("nouveau bloc if")
-        self.c1.create_image(0, 0, anchor=NW, image=image2)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
-
+        return Canevas.create_image(0, 0, anchor=NW, image=imgVide)
     def getEntry(self):
-        return self.e1.get()
+        return self.entry
     def getGenId(self):
         return self.bId
 
-
 class Variable:
     id = 7
-
+    entry = ""
     def __init__(self):
-        print(genId)
-        self.c1 = Canvas(Canevas, width=L, height=H, bg='white')
-        self.e1 = Entry(Canevas)
         self.bId = genId
-
     def new(self):
-        print("nouveau bloc if")
-        self.c1.create_image(0, 0, anchor=NW, image=image2)
-        self.c1.create_window(30, 30, anchor=NW, window=self.e1)
-        # La méthode bind() permet de lier un événement avec une fonction
-        self.c1.bind('<Button-1>', ClicG)  # évévement clic gauche (press)
-        self.c1.bind('<Button-3>', ClicD)  # évévement clic gauche (press)
-        self.c1.bind('<B1-Motion>', Drag)  # événement bouton gauche enfoncé (hold down)
-        return Canevas.create_window(2, 2, anchor=NW, window=self.c1)
-        self.c1.focus_set()
-        self.c1.pack(padx=10, pady=10)
-
+        return Canevas.create_image(0, 0, anchor=NW, image=imgVide)
     def getEntry(self):
-        return self.e1.get()
-
+        return self.entry
     def getGenId(self):
         return self.bId
 
@@ -402,7 +321,6 @@ nbCarre = 1
 Carre = list()
 Blocs = list()
 DETECTION_CLIC_SUR_OBJET = list()
-
 
 
 # Création de la fenêtre principale
@@ -445,16 +363,16 @@ H = 70
 
 
 # ouverture des images
-image = ImageTk.PhotoImage(file ='images/bloc-debut.png')
-image2 = ImageTk.PhotoImage(file ='images/bloc-vide.png')
-image3 = ImageTk.PhotoImage(file ='images/bloc-print.png')
-image4 = ImageTk.PhotoImage(file ='images/bloc-if.png')
-image5 = ImageTk.PhotoImage(file ='images/bloc-else.png')
-image6 = ImageTk.PhotoImage(file ='images/bloc-endOfLoop.png')
+imgDeb = ImageTk.PhotoImage(file ='images/bloc-debut.png')
+imgVide = ImageTk.PhotoImage(file ='images/bloc-vide.png')
+imgPrint = ImageTk.PhotoImage(file ='images/bloc-print.png')
+imgIf = ImageTk.PhotoImage(file ='images/bloc-if.png')
+imgElse = ImageTk.PhotoImage(file ='images/bloc-else.png')
+imgEndOfLoop = ImageTk.PhotoImage(file ='images/bloc-endOfLoop.png')
 
 
 # Creation du bloc de demarrage
-Carre.append(Canevas.create_image(600, 600, anchor=NW, image=image))
+Carre.append(Canevas.create_image(600, 600, anchor=NW, image=imgDeb))
 DETECTION_CLIC_SUR_OBJET.append(False)
 Convertion = {1:'Debut'}
 
