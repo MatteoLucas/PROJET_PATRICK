@@ -240,10 +240,12 @@ def takeUserInput():
                 userInput = simpledialog.askstring("Ajouter une valeur", "Valeur :")
                 if userInput == None : userInput = ''
                 valeur[n] = userInput
+                Blocs[n-1].entry = userInput
             elif valeur[n] != '' :
                 userInput = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + valeur[n] + ", Nouvelle valeur :")
                 if userInput == None: userInput = valeur[n]
                 valeur[n] = userInput
+                Blocs[n-1].entry = userInput
 
     for n in range(0, nbCarre):
         print(valeur[n])
