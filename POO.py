@@ -1,6 +1,8 @@
 from tkinter import *
 import threading
 from tkinter import Entry
+import os
+import subprocess
 
 from PIL import ImageTk
 
@@ -134,6 +136,9 @@ def Executer():
         for b in Blocs:
             if b.getGenId() == i:
                 Write(b)
+    f.close()
+    path = os.path.realpath("monFichierScratch.py")
+    os.system("python "+ path)
 
 f = open("monFichierScratch.py", "w+")
 tab = 0
@@ -158,16 +163,6 @@ def Write(b):
         f.write("\n" + tab * "\t" + b.getEntry())
     elif b.id == 5:
         tab = tab - 1
-        '''
-        if 'if' in toWrite or 'else' in toWrite or 'for' in toWrite or 'while' in toWrite or 'elif' in toWrite:
-            f.write("\n" + tab * "\t" + toWrite)
-            tab = tab + 1
-        elif 'endOfLoop' == toWrite:
-            tab = tab - 1
-        elif tab > 0:
-            f.write("\n" + tab * "\t" + toWrite)
-        else:
-            f.write("\n" + toWrite)'''
 
     #f.close()
 def Save():
