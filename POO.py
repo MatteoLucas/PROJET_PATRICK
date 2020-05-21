@@ -113,7 +113,7 @@ def Drag(event):
     X = event.x
     Y = event.y
 
-    for n in range (0,nbCarre) :
+    for n in range(0, nbCarre):
         if DETECTION_CLIC_SUR_OBJET[n] == True:
             # limite de l'objet dans la zone graphique
             if X<0: X=0
@@ -128,6 +128,8 @@ def Drag(event):
 
 def Executer():
     print('Execution')
+    global f
+    f = open("monFichierScratch.py", "w+")
     o = ordre[0]
     for i in o:
         for b in Blocs:
