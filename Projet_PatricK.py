@@ -436,10 +436,12 @@ Canevas = Canvas(Mafenetre,width=Largeur,height=Hauteur,bg ='white')
 L = 200
 H = 70
 
+
 # Taille de l'ecran
 for m in get_monitors():
     hauteurEcran = m.height
     longueurEcran = m.width
+
 
 # ouverture des images
 imgDeb = ImageTk.PhotoImage(file ='images/bloc-debut.png')
@@ -481,7 +483,6 @@ menu2.add_command(label='Attendre', command=lambda: creationBloc(Delay()))
 menubar.add_cascade(label="Blocs", menu=menu2)
 
 menubar.add_command(label = "Ajouter une valeur", command = takeUserInput)
-
 menubar.add_command(label = "Plein écran ", command = fullScreen)
 
 Mafenetre.config(menu=menubar)
@@ -500,6 +501,7 @@ Canevas.bind('<B1-Motion>',Drag) # événement bouton gauche enfoncé (hold down
 thColision = Colision()
 thColision.start()
 
+# Parametrage fenetre
 Mafenetre.iconphoto(False, PhotoImage(file='images/icone.png'))
 Mafenetre.protocol('WM_DELETE_WINDOW', thColision.stop)
 Mafenetre.protocol('WM_SIZE_MAXIMIZED', fullScreen)
