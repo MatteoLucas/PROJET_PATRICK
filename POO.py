@@ -69,8 +69,7 @@ class While:
 class For:
     id = 6
     entry = ""
-    display1 = "Variable"
-    display2 = "Séquence (ex: range(0,4))"
+    display = "Nombre de fois à répéter"
     def __init__(self):
         self.bId = genId
     def new(self):
