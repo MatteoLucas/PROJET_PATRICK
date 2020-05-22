@@ -278,7 +278,7 @@ def Save(executer):
     global time
     global random
 
-    f = open("monFichierScratch.py", "w+")
+    f = open("monFichierPatricK.py", "w+")
     o = ordre[0]
     tab = 0
     time = False
@@ -289,7 +289,7 @@ def Save(executer):
                 Write(b)
     f.close()
     if executer == True :
-        path = os.path.realpath("monFichierScratch.py")
+        path = os.path.realpath("monFichierPatricK.py")
         os.system("python "+ path)
 
 def Write(b):
@@ -388,7 +388,7 @@ def creationBloc(type):
 
 """-------- CODE PRINCIPAL --------"""
 # Creation des variables
-f = open("monFichierScratch.py", "w+")
+f = open("monFichierPatricK.py", "w+")
 tab = 0
 genId = 0
 listeColision = list()
