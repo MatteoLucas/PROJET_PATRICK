@@ -4,6 +4,7 @@ import threading
 from tkinter import simpledialog
 import os
 from PIL import ImageTk
+from screeninfo import get_monitors
 
 
 
@@ -226,12 +227,10 @@ class Colision(threading.Thread):
 
                 # Mise en memoire
             ordre = list(listeColision)
-        print("le thread s'est termine proprement")
-        Mafenetre.destroy()
+        Mafenetre.quit()
 
     def stop(self):
         self.running = False
-
 
 def ClicD(event):
     """ Gestion de l'événement Clic droit """
@@ -271,9 +270,9 @@ def Drag(event):
         if DETECTION_CLIC_SUR_OBJET[n] == True:
             # limite de l'objet dans la zone graphique
             if X<0: X=0
-            if X>Largeur: X=Largeur
+            if X>Canevas.winfo_width(): X=Canevas.winfo_width()
             if Y<0: Y=0
-            if Y>Hauteur: Y=Hauteur
+            if Y>Canevas.winfo_height(): Y=Canevas.winfo_height()
 
             # mise à jour de la position de l'objet (drag)
             for i in range (0, len(ordre[n])) :
@@ -394,6 +393,18 @@ def creationBloc(type):
     DETECTION_CLIC_SUR_OBJET.append(False)
     nbCarre = len(Carre)
 
+def fullScreen():
+    global fScreen
+    if fScreen == True :
+        fScreen = False
+        Mafenetre.attributes('-fullscreen', False)
+        Canevas.config(width=Largeur, height=Hauteur)
+
+    elif fScreen == False:
+        fScreen = True
+        Mafenetre.attributes('-fullscreen', True)
+        Canevas.config(width= longueurEcran, height=hauteurEcran)
+
 
 
 
@@ -402,6 +413,7 @@ def creationBloc(type):
 f = open("monFichierPatricK.py", "w+")
 tab = 0
 genId = 0
+fScreen = False
 listeColision = list()
 nbCarre = 1
 Carre = list()
@@ -423,6 +435,13 @@ Canevas = Canvas(Mafenetre,width=Largeur,height=Hauteur,bg ='white')
 # Taille des blocs
 L = 200
 H = 70
+
+# Taille de l'ecran
+for m in get_monitors():
+    hauteurEcran = m.height
+    longueurEcran = m.width
+
+
 
 
 # ouverture des images
@@ -466,14 +485,13 @@ menubar.add_cascade(label="Blocs", menu=menu2)
 
 menubar.add_command(label = "Ajouter une valeur", command = takeUserInput)
 
-menubar.add_command(label = "quitter", command =lambda: thColision.stop())
+menubar.add_command(label = "Plein écran ", command = fullScreen)
 
 Mafenetre.config(menu=menubar)
 
 
 # Creation du bloc de demarrage
 creationBloc(Debut())
-
 
 # Creation des evenements
 Canevas.bind('<Button-1>',ClicG) # évévement clic gauche (press)
@@ -485,11 +503,10 @@ Canevas.bind('<B1-Motion>',Drag) # événement bouton gauche enfoncé (hold down
 thColision = Colision()
 thColision.start()
 
-
+Mafenetre.iconphoto(False, PhotoImage(file='images/icone.png'))
+Mafenetre.protocol('WM_DELETE_WINDOW', thColision.stop)
 Canevas.focus_set()
 Canevas.pack(padx=10,pady=10)
 
 
 Mafenetre.mainloop()
-
-
