@@ -151,8 +151,11 @@ class Input:
 """-------- CREATION DES FONCTION POUR LE DEPLACEMENT DES BLOCS --------"""
 def Colision():
     global ordre
+    global fin
 
-    while 1:
+    while 1 :
+        if fin == False :
+            break
         nbCarreActuel = nbCarre
         listeColision = []
 
@@ -469,6 +472,7 @@ Canevas.bind('<B1-Motion>',Drag) # événement bouton gauche enfoncé (hold down
 
 
 # Demarrage du thread de colision
+fin = False
 thColision = threading.Thread(target=Colision)
 thColision.start()
 
@@ -478,3 +482,5 @@ Canevas.pack(padx=10,pady=10)
 
 
 Mafenetre.mainloop()
+fin = True
+
