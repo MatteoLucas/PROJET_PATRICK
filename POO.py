@@ -3,7 +3,6 @@ from tkinter import *
 import threading
 from tkinter import simpledialog
 import os
-import time
 from PIL import ImageTk
 
 
@@ -206,7 +205,6 @@ def ClicG(event):
     # position du pointeur de la souris
     X = event.x
     Y = event.y
-    print(X,Y)
     for n in range(0,nbCarre) :
         [xmin,ymin] = Canevas.coords(Carre[n])
 
@@ -215,8 +213,6 @@ def ClicG(event):
         if xmin<=X<=xmax and ymin<=Y<=ymax:
             DETECTION_CLIC_SUR_OBJET[n] = True
         else: DETECTION_CLIC_SUR_OBJET[n] = False
-
-    print(DETECTION_CLIC_SUR_OBJET)
 
 def Drag(event):
     """ Gestion de l'événement bouton gauche enfoncé """
