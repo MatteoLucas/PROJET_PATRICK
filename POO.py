@@ -108,6 +108,24 @@ class Delay:
     def getGenId(self):
         return self.bId
 
+class Random:
+    id = 10
+    entry1 = ""
+    entry2 = ""
+    entry3 = ""
+    def __init__(self):
+        self.bId = genId
+    def new(self):
+        return Canevas.create_image(0, 0, anchor=NW, image=imgRandom)
+    def getEntry1(self):
+        return self.entry1
+    def getEntry2(self):
+        return self.entry2
+    def getEntry3(self):
+        return self.entry3
+    def getGenId(self):
+        return self.bId
+
 
 
 
@@ -235,28 +253,34 @@ def Drag(event):
 
 
 """-------- CREATION DES FONCTION POUR LE 'EXECUTION DU PROGRAMME --------"""
-def Executer():
+def Save(executer):
     global f
     global tab
     global time
+    global random
+
     f = open("monFichierScratch.py", "w+")
     o = ordre[0]
     tab = 0
     time = False
+    random = False
     for i in o:
         for b in Blocs:
             if b.getGenId() == i:
                 Write(b)
     f.close()
-    path = os.path.realpath("monFichierScratch.py")
-    os.system("python "+ path)
+    if executer == True :
+        path = os.path.realpath("monFichierScratch.py")
+        os.system("python "+ path)
 
 def Write(b):
     global tab
     global time
+    global random
     global f
+
     if b.id == 1:
-        f.write("\n" + tab * "\t" + "print('"+b.getEntry()+"')")
+        f.write("\n" + tab * "\t" + "print("+b.getEntry()+")")
     if b.id == 2:
         f.write("\n" + tab * "\t" + "if "+b.getEntry()+":")
         tab = tab + 1
@@ -270,25 +294,25 @@ def Write(b):
         f.write("\n" + tab * "\t" + "for z in range (0,"+b.getEntry()+") :")
         tab = tab + 1
     if b.id == 9:
+        if time == True:
+            f.write("\n" + tab * "\t" + "time.sleep(" + b.getEntry() + ")")
         if time == False :
             f.write("\n" + tab * "\t" + "import time" + "\n" + tab * "\t" + "time.sleep("+b.getEntry()+")")
             time = True
-        if time == True :
-            f.write("\n" + tab * "\t" + "time.sleep(" + b.getEntry() + ")")
+    if b.id == 10:
+        if b.getEntry2() == b.getEntry3() == '' :
+            Range = ""
+        else :
+            Range = b.getEntry2() + ", " + b.getEntry3()
+        if random == True:
+            f.write("\n" + tab * "\t" + b.getEntry1() + " = " + 'random.random(' + Range + ')')
+        if random == False :
+            f.write("\n" + tab * "\t" + "import random" + "\n" + tab * "\t" + b.getEntry1() + " = " + 'random.random(' + Range + ')' )
+            random = True
     if b.id == 7:
         f.write("\n" + tab * "\t" + b.getEntry())
     elif b.id == 5:
         tab = tab - 1
-
-def Save():
-    global f
-    f = open("monFichierScratch.py", "w+")
-    o = ordre[0]
-    for i in o:
-        for b in Blocs:
-            if b.getGenId() == i:
-                Write(b)
-    f.close()
 
 
 
@@ -296,16 +320,37 @@ def Save():
 """-------- CREATION DES FONCTION POUR LES BOUTONS --------"""
 def takeUserInput():
     for n in range(0, nbCarre):
-        if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id != 3 and Blocs[n].id != 5 and Blocs[n].id != 8:
+        if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id != 3 and Blocs[n].id != 5 and Blocs[n].id != 8 and Blocs[n].id != 10:
             if Blocs[n].entry == '':
                 userInput = simpledialog.askstring("Ajouter une valeur", "Valeur :")
                 if userInput == None : userInput = ''
-                Blocs[n].entry = userInput
                 Blocs[n].entry = userInput
             elif Blocs[n].entry != '' :
                 userInput = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry + ", Nouvelle valeur :")
                 if userInput == None: userInput = Blocs[n].entry
                 Blocs[n].entry = userInput
+        if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id == 10 :
+            if Blocs[n].entry1 == '':
+                userInput1 = simpledialog.askstring("Ajouter une valeur", "Variable :")
+            elif Blocs[n].entry != '':
+                userInput1 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry1 + ", Nouvelle Borne inférieure :")
+
+            if Blocs[n].entry2 == '':
+                userInput2 = simpledialog.askstring("Ajouter une valeur", "Borne inférieure :")
+            elif Blocs[n].entry != '':
+                userInput2 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + ", Nouvelle Borne inférieure :")
+
+            if Blocs[n].entry3 == '':
+                userInput3 = simpledialog.askstring("Ajouter une valeur", "Borne supérieure :")
+            elif Blocs[n].entry != '':
+                userInput3 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry3 + ", Nouvelle Borne inférieure :")
+
+            if userInput3 == None: userInput3 = ''
+            if userInput3 == None: userInput3 = ''
+            if userInput3 == None: userInput3 = ''
+            Blocs[n].entry1 = userInput1
+            Blocs[n].entry2 = userInput2
+            Blocs[n].entry3 = userInput3
 
 def creationBloc(type):
     global nbCarre
@@ -358,14 +403,15 @@ imgFor = ImageTk.PhotoImage(file ='images/bloc-for.png')
 imgWhile = ImageTk.PhotoImage(file ='images/bloc-while.png')
 imgVar = ImageTk.PhotoImage(file ='images/bloc-variable.png')
 imgDelay = ImageTk.PhotoImage(file ='images/bloc-delay.png')
+imgRandom = ImageTk.PhotoImage(file ='images/bloc-random.png')
 
 
 # Creation du menu
 menubar = Menu(Mafenetre)
 
 menu1 = Menu(menubar, tearoff=0)
-menu1.add_command(label='Exécuter', command=Executer)
-menu1.add_command(label='Save', command=Save)
+menu1.add_command(label='Exécuter', command=lambda: Save(True))
+menu1.add_command(label='Sauvegarder', command=lambda: Save(False))
 menubar.add_cascade(label="Actions", menu=menu1)
 
 menu2 = Menu(menubar, tearoff=0)
@@ -378,6 +424,7 @@ menu2.add_command(label='Répéter', command=lambda: creationBloc(For()))
 menu2.add_command(label='Tant que', command=lambda: creationBloc(While()))
 menu2.add_separator()
 menu2.add_command(label='Variable', command=lambda: creationBloc(Variable()))
+menu2.add_command(label='Nombre aléatoire', command=lambda: creationBloc(Random()))
 menu2.add_separator()
 menu2.add_command(label='Attendre', command=lambda: creationBloc(Delay()))
 menubar.add_cascade(label="Blocs", menu=menu2)
