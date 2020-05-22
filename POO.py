@@ -154,7 +154,7 @@ def Colision():
     global fin
 
     while 1 :
-        if fin == False :
+        if fin == True :
             break
         nbCarreActuel = nbCarre
         listeColision = []
