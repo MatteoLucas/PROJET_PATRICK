@@ -136,6 +136,7 @@ class Random:
 class Input:
     id = 11
     entry = ""
+    display = "Variable a renseigner"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -359,10 +360,10 @@ def takeUserInput():
             if Blocs[n].entry2 == '':
                 userInput2 = simpledialog.askstring("Ajouter une valeur", "Borne inférieure :")
             elif Blocs[n].entry2 != '':
-                userInput2 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + ", Nouvelle Borne inférieure :")
+                userInput2 = simpledialog.askinteger("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + ", Nouvelle Borne inférieure :")
 
             if Blocs[n].entry3 == '':
-                userInput3 = simpledialog.askstring("Ajouter une valeur", "Borne supérieure :")
+                userInput3 = simpledialog.askinteger("Ajouter une valeur", "Borne supérieure :")
             elif Blocs[n].entry3 != '':
                 userInput3 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry3 + ", Nouvelle Borne inférieure :")
 
