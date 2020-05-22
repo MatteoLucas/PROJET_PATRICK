@@ -4,6 +4,7 @@ import threading
 from tkinter import simpledialog
 import os
 from PIL import ImageTk
+import time
 
 
 
@@ -149,81 +150,88 @@ class Input:
 
 
 """-------- CREATION DES FONCTION POUR LE DEPLACEMENT DES BLOCS --------"""
-def Colision():
-    global ordre
-    global fin
+class Colision(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
 
-    while 1 :
-        if fin == True :
-            break
-        nbCarreActuel = nbCarre
-        listeColision = []
+    def run(self):
+        global ordre
+        self.running = True
+        while self.running :
 
-        for n in range(0, nbCarreActuel) :
-            listeColision.append(list())
-            listeColision[n].append(n)
+            nbCarreActuel = nbCarre
+            listeColision = []
 
-        for n in range(0, nbCarreActuel) :
-            [Xmin, Ymin] = Canevas.coords(Carre[n])
-            colision = Canevas.find_overlapping(Xmin, Ymin, Xmin + L, Ymin + H)
+            for n in range(0, nbCarreActuel) :
+                listeColision.append(list())
+                listeColision[n].append(n)
+
+            for n in range(0, nbCarreActuel) :
+                [Xmin, Ymin] = Canevas.coords(Carre[n])
+                colision = Canevas.find_overlapping(Xmin, Ymin, Xmin + L, Ymin + H)
+
+                # Colision de 3 blocs
+                if len(colision) == 3 :
+                    [xmin1, ymin1] = Canevas.coords(Carre[colision[0] - 1])
+                    [xmin2, ymin2] = Canevas.coords(Carre[colision[1] - 1])
+                    [xmin3, ymin3] = Canevas.coords(Carre[colision[2] - 1])
+
+                    if colision[0]-1 == n :
+                        if ymin2 > ymin3 :
+                            listeColision[n].append(colision[1]-1)
+                            Canevas.coords(Carre[colision[1]-1], xmin1, ymin1 + H - 6)
+                        if ymin3 > ymin2:
+                            listeColision[n].append(colision[2]-1)
+                            Canevas.coords(Carre[colision[2]-1], xmin1, ymin1 + H - 6)
+
+                    if colision[1]-1 == n :
+                        if ymin1 > ymin3 :
+                            listeColision[n].append(colision[0]-1)
+                            Canevas.coords(Carre[colision[0]-1], xmin2, ymin2 + H - 6)
+                        if ymin3 > ymin1:
+                            listeColision[n].append(colision[2]-1)
+                            Canevas.coords(Carre[colision[2]-1], xmin2, ymin2 + H - 6)
+
+                    if colision[2]-1 == n :
+                        if ymin1 > ymin2 :
+                            listeColision[n].append(colision[0]-1)
+                            Canevas.coords(Carre[colision[0]-1], xmin3, ymin3 + H - 6)
+                        if ymin2 > ymin1 :
+                            listeColision[n].append(colision[1]-1)
+                            Canevas.coords(Carre[colision[1]-1], xmin3, ymin3 + H - 6)
 
 
-            # Colision de 3 blocs
-            if len(colision) == 3 :
-                [xmin1, ymin1] = Canevas.coords(Carre[colision[0] - 1])
-                [xmin2, ymin2] = Canevas.coords(Carre[colision[1] - 1])
-                [xmin3, ymin3] = Canevas.coords(Carre[colision[2] - 1])
+                # Colision de 2 blocs
+                if len(colision) == 2 :
+                    [xmin1, ymin1] = Canevas.coords(Carre[colision[0] - 1])
+                    [xmin, ymin] = Canevas.coords(Carre[colision[1] - 1])
 
-                if colision[0]-1 == n :
-                    if ymin2 > ymin3 :
+                    if colision[0]-1 == n and ymin1 < ymin :
                         listeColision[n].append(colision[1]-1)
                         Canevas.coords(Carre[colision[1]-1], xmin1, ymin1 + H - 6)
-                    if ymin3 > ymin2:
-                        listeColision[n].append(colision[2]-1)
-                        Canevas.coords(Carre[colision[2]-1], xmin1, ymin1 + H - 6)
 
-                if colision[1]-1 == n :
-                    if ymin1 > ymin3 :
+                    if colision[1]-1 == n and ymin1 > ymin:
                         listeColision[n].append(colision[0]-1)
-                        Canevas.coords(Carre[colision[0]-1], xmin2, ymin2 + H - 6)
-                    if ymin3 > ymin1:
-                        listeColision[n].append(colision[2]-1)
-                        Canevas.coords(Carre[colision[2]-1], xmin2, ymin2 + H - 6)
-
-                if colision[2]-1 == n :
-                    if ymin1 > ymin2 :
-                        listeColision[n].append(colision[0]-1)
-                        Canevas.coords(Carre[colision[0]-1], xmin3, ymin3 + H - 6)
-                    if ymin2 > ymin1 :
-                        listeColision[n].append(colision[1]-1)
-                        Canevas.coords(Carre[colision[1]-1], xmin3, ymin3 + H - 6)
+                        Canevas.coords(Carre[colision[0]-1], xmin, ymin + H - 6)
 
 
-            # Colision de 2 blocs
-            if len(colision) == 2 :
-                [xmin1, ymin1] = Canevas.coords(Carre[colision[0] - 1])
-                [xmin, ymin] = Canevas.coords(Carre[colision[1] - 1])
-
-                if colision[0]-1 == n and ymin1 < ymin :
-                    listeColision[n].append(colision[1]-1)
-                    Canevas.coords(Carre[colision[1]-1], xmin1, ymin1 + H - 6)
-
-                if colision[1]-1 == n and ymin1 > ymin:
-                    listeColision[n].append(colision[0]-1)
-                    Canevas.coords(Carre[colision[0]-1], xmin, ymin + H - 6)
+                # On fusionne chaque liste
+            for i in range(0, nbCarreActuel) :
+                for n in range(0, nbCarreActuel) :
+                    suivant = listeColision[n][-1]
+                    if listeColision[n][0] != suivant :
+                        del listeColision[n][-1]
+                        listeColision[n] = listeColision[n] + listeColision[suivant]
 
 
-            # On fusionne chaque liste
-        for i in range(0, nbCarreActuel) :
-            for n in range(0, nbCarreActuel) :
-                suivant = listeColision[n][-1]
-                if listeColision[n][0] != suivant :
-                    del listeColision[n][-1]
-                    listeColision[n] = listeColision[n] + listeColision[suivant]
+                # Mise en memoire
+            ordre = list(listeColision)
+        print("le thread s'est termine proprement")
+        Mafenetre.destroy()
 
+    def stop(self):
+        self.running = False
 
-            # Mise en memoire
-        ordre = list(listeColision)
 
 def ClicD(event):
     """ Gestion de l'événement Clic droit """
@@ -458,6 +466,8 @@ menubar.add_cascade(label="Blocs", menu=menu2)
 
 menubar.add_command(label = "Ajouter une valeur", command = takeUserInput)
 
+menubar.add_command(label = "quitter", command =lambda: thColision.stop())
+
 Mafenetre.config(menu=menubar)
 
 
@@ -472,8 +482,7 @@ Canevas.bind('<B1-Motion>',Drag) # événement bouton gauche enfoncé (hold down
 
 
 # Demarrage du thread de colision
-fin = False
-thColision = threading.Thread(target=Colision)
+thColision = Colision()
 thColision.start()
 
 
@@ -482,5 +491,5 @@ Canevas.pack(padx=10,pady=10)
 
 
 Mafenetre.mainloop()
-fin = True
+
 
