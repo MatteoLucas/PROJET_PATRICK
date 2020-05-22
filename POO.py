@@ -267,7 +267,7 @@ def Write(b):
         f.write("\n" + tab * "\t" + "while "+b.getEntry()+":")
         tab = tab + 1
     if b.id == 6:
-        f.write("\n" + tab * "\t" + "for "+b.getEntry()+":")
+        f.write("\n" + tab * "\t" + "for z in range (0,"+b.getEntry()+") :")
         tab = tab + 1
     if b.id == 9:
         if time == False :
@@ -374,7 +374,7 @@ menu2.add_separator()
 menu2.add_command(label="Si", command=lambda: creationBloc(If()))
 menu2.add_command(label="Sinon", command=lambda: creationBloc(Else()))
 menu2.add_command(label='Fin de boucle', command=lambda: creationBloc(endOfLoop()))
-menu2.add_command(label='Pour', command=lambda: creationBloc(For()))
+menu2.add_command(label='Répéter', command=lambda: creationBloc(For()))
 menu2.add_command(label='Tant que', command=lambda: creationBloc(While()))
 menu2.add_separator()
 menu2.add_command(label='Variable', command=lambda: creationBloc(Variable()))
