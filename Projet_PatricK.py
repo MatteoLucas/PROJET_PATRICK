@@ -4,7 +4,7 @@ import threading
 from tkinter import simpledialog
 import os
 from PIL import ImageTk
-import time
+
 
 
 
