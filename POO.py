@@ -3,6 +3,7 @@ from tkinter import *
 import threading
 from tkinter import simpledialog
 import os
+import time
 from PIL import ImageTk
 
 
@@ -95,6 +96,20 @@ class Debut:
         return Canevas.create_image(0, 0, anchor=NW, image=imgDeb)
     def getGenId(self):
         return self.bId
+
+class Delay:
+    id = 9
+    entry = ""
+    def __init__(self):
+        self.bId = genId
+    def new(self):
+        return Canevas.create_image(0, 0, anchor=NW, image=imgDelay)
+    def getEntry(self):
+        return self.entry
+    def getGenId(self):
+        return self.bId
+
+
 
 
 """-------- CREATION DES FONCTION POUR LE DEPLACEMENT DES BLOCS --------"""
@@ -227,9 +242,11 @@ def Drag(event):
 def Executer():
     global f
     global tab
+    global time
     f = open("monFichierScratch.py", "w+")
     o = ordre[0]
     tab = 0
+    time = False
     for i in o:
         for b in Blocs:
             if b.getGenId() == i:
@@ -240,6 +257,7 @@ def Executer():
 
 def Write(b):
     global tab
+    global time
     global f
     if b.id == 1:
         f.write("\n" + tab * "\t" + "print('"+b.getEntry()+"')")
@@ -255,6 +273,12 @@ def Write(b):
     if b.id == 6:
         f.write("\n" + tab * "\t" + "for "+b.getEntry()+":")
         tab = tab + 1
+    if b.id == 9:
+        if time == False :
+            f.write("\n" + tab * "\t" + "import time" + "\n" + tab * "\t" + "time.sleep("+b.getEntry()+")")
+            time = True
+        if time == True :
+            f.write("\n" + tab * "\t" + "time.sleep(" + b.getEntry() + ")")
     if b.id == 7:
         f.write("\n" + tab * "\t" + b.getEntry())
     elif b.id == 5:
@@ -337,6 +361,7 @@ imgEndOfLoop = ImageTk.PhotoImage(file ='images/bloc-endOfLoop.png')
 imgFor = ImageTk.PhotoImage(file ='images/bloc-for.png')
 imgWhile = ImageTk.PhotoImage(file ='images/bloc-while.png')
 imgVar = ImageTk.PhotoImage(file ='images/bloc-variable.png')
+imgDelay = ImageTk.PhotoImage(file ='images/bloc-delay.png')
 
 
 # Creation du menu
@@ -357,6 +382,8 @@ menu2.add_command(label='Pour', command=lambda: creationBloc(For()))
 menu2.add_command(label='Tant que', command=lambda: creationBloc(While()))
 menu2.add_separator()
 menu2.add_command(label='Variable', command=lambda: creationBloc(Variable()))
+menu2.add_separator()
+menu2.add_command(label='Attendre', command=lambda: creationBloc(Delay()))
 menubar.add_cascade(label="Blocs", menu=menu2)
 
 menubar.add_command(label = "Ajouter une valeur", command = takeUserInput)
