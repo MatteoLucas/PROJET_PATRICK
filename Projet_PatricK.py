@@ -441,9 +441,6 @@ for m in get_monitors():
     hauteurEcran = m.height
     longueurEcran = m.width
 
-
-
-
 # ouverture des images
 imgDeb = ImageTk.PhotoImage(file ='images/bloc-debut.png')
 imgVide = ImageTk.PhotoImage(file ='images/bloc-vide.png')
@@ -505,6 +502,7 @@ thColision.start()
 
 Mafenetre.iconphoto(False, PhotoImage(file='images/icone.png'))
 Mafenetre.protocol('WM_DELETE_WINDOW', thColision.stop)
+Mafenetre.protocol('WM_SIZE_MAXIMIZED', fullScreen)
 Canevas.focus_set()
 Canevas.pack(padx=10,pady=10)
 
