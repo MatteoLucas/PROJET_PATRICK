@@ -12,6 +12,7 @@ from PIL import ImageTk
 class Print:
     id = 1
     entry = ""
+    display = 'Valeur à afficher (entre "" pour string)'
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -33,6 +34,7 @@ class endOfLoop:
 class If:
     id = 2
     entry = ""
+    display = "Condition à remplir (a == true)"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -54,6 +56,7 @@ class Else:
 class While:
     id = 4
     entry = ""
+    display = "Condition à remplir (a <= 4)"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -66,6 +69,8 @@ class While:
 class For:
     id = 6
     entry = ""
+    display1 = "Variable"
+    display2 = "Séquence (ex: range(0,4))"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -78,6 +83,7 @@ class For:
 class Variable:
     id = 7
     entry = ""
+    display = "Directement retranscrit en python"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -99,6 +105,7 @@ class Debut:
 class Delay:
     id = 9
     entry = ""
+    display = "Temps à attendre en sec"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -123,18 +130,6 @@ class Random:
         return self.entry2
     def getEntry3(self):
         return self.entry3
-    def getGenId(self):
-        return self.bId
-
-class Input:
-    id = 11
-    entry = ""
-    def __init__(self):
-        self.bId = genId
-    def new(self):
-        return Canevas.create_image(0, 0, anchor=NW, image=imgInput)
-    def getEntry(self):
-        return self.entry
     def getGenId(self):
         return self.bId
 
@@ -313,13 +308,13 @@ def Write(b):
             time = True
     if b.id == 10:
         if b.getEntry2() == b.getEntry3() == '' :
-            Range = "-10**99, 10**99"
+            Range = ""
         else :
             Range = b.getEntry2() + ", " + b.getEntry3()
         if random == True:
             f.write("\n" + tab * "\t" + b.getEntry1() + " = " + 'random.random(' + Range + ')')
         if random == False :
-            f.write("\n" + tab * "\t" + "import random" + "\n" + tab * "\t" + b.getEntry1() + " = " + 'random.randint(' + Range + ')' )
+            f.write("\n" + tab * "\t" + "import random" + "\n" + tab * "\t" + b.getEntry1() + " = " + 'random.random(' + Range + ')' )
             random = True
     if b.id == 7:
         f.write("\n" + tab * "\t" + b.getEntry())
@@ -334,27 +329,27 @@ def takeUserInput():
     for n in range(0, nbCarre):
         if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id != 3 and Blocs[n].id != 5 and Blocs[n].id != 8 and Blocs[n].id != 10:
             if Blocs[n].entry == '':
-                userInput = simpledialog.askstring("Ajouter une valeur", "Valeur :")
+                userInput = simpledialog.askstring("Ajouter une valeur", Blocs[n].display)
                 if userInput == None : userInput = ''
                 Blocs[n].entry = userInput
             elif Blocs[n].entry != '' :
-                userInput = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry + ", Nouvelle valeur :")
+                userInput = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry + " " + Blocs[n].display)
                 if userInput == None: userInput = Blocs[n].entry
                 Blocs[n].entry = userInput
         if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id == 10 :
             if Blocs[n].entry1 == '':
                 userInput1 = simpledialog.askstring("Ajouter une valeur", "Variable :")
-            elif Blocs[n].entry != '':
+            elif Blocs[n].entry1 != '':
                 userInput1 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry1 + ", Nouvelle Borne inférieure :")
 
             if Blocs[n].entry2 == '':
                 userInput2 = simpledialog.askstring("Ajouter une valeur", "Borne inférieure :")
-            elif Blocs[n].entry != '':
+            elif Blocs[n].entry2 != '':
                 userInput2 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + ", Nouvelle Borne inférieure :")
 
             if Blocs[n].entry3 == '':
                 userInput3 = simpledialog.askstring("Ajouter une valeur", "Borne supérieure :")
-            elif Blocs[n].entry != '':
+            elif Blocs[n].entry3 != '':
                 userInput3 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry3 + ", Nouvelle Borne inférieure :")
 
             if userInput3 == None: userInput3 = ''
@@ -416,7 +411,6 @@ imgWhile = ImageTk.PhotoImage(file ='images/bloc-while.png')
 imgVar = ImageTk.PhotoImage(file ='images/bloc-variable.png')
 imgDelay = ImageTk.PhotoImage(file ='images/bloc-delay.png')
 imgRandom = ImageTk.PhotoImage(file ='images/bloc-random.png')
-imgInput = ImageTk.PhotoImage(file ='images/bloc-input.png')
 
 
 # Creation du menu
@@ -436,7 +430,6 @@ menu2.add_command(label='Fin de boucle', command=lambda: creationBloc(endOfLoop(
 menu2.add_command(label='Répéter', command=lambda: creationBloc(For()))
 menu2.add_command(label='Tant que', command=lambda: creationBloc(While()))
 menu2.add_separator()
-menu2.add_command(label='Saisir', command=lambda: creationBloc(Input()))
 menu2.add_command(label='Variable', command=lambda: creationBloc(Variable()))
 menu2.add_command(label='Nombre aléatoire', command=lambda: creationBloc(Random()))
 menu2.add_separator()
