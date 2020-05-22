@@ -105,7 +105,7 @@ class Debut:
 class Delay:
     id = 9
     entry = ""
-    display = "Temps à attendre en sec"
+    display = "Temps à attendre en secondes :"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -136,7 +136,7 @@ class Random:
 class Input:
     id = 11
     entry = ""
-    display = "Variable a renseigner"
+    display = "Variable a renseigner :"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -323,7 +323,7 @@ def Write(b):
         if b.getEntry2() == b.getEntry3() == '':
             Range = "-10**99, 10**99"
         else:
-            Range = b.getEntry2() + ", " + b.getEntry3()
+            Range = str("int(" + b.getEntry2() + ")") + ", " + str("int(" + b.getEntry3() + ")")
         if random == True:
             f.write("\n" + tab * "\t" + b.getEntry1() + " = " + 'random.random(' + Range + ')')
         if random == False:
@@ -331,8 +331,9 @@ def Write(b):
             random = True
     if b.id == 7:
         f.write("\n" + tab * "\t" + b.getEntry())
-    if b.id == 7:
-        f.write("\n" + tab * "\t" + b.getEntry())
+    if b.id == 11:
+        f.write("\n" + tab * "\t" + b.getEntry() + ' = input("' + b.getEntry() + ' : ")' )
+
     elif b.id == 5:
         tab = tab - 1
 
@@ -353,22 +354,22 @@ def takeUserInput():
                 Blocs[n].entry = userInput
         if DETECTION_CLIC_SUR_OBJET[n] == True and Blocs[n].id == 10 :
             if Blocs[n].entry1 == '':
-                userInput1 = simpledialog.askstring("Ajouter une valeur", "Variable :")
+                userInput1 = simpledialog.askstring("Ajouter une valeur", "Variable a renseigner:")
             elif Blocs[n].entry1 != '':
-                userInput1 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry1 + ", Nouvelle Borne inférieure :")
+                userInput1 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry1 + "," + "\n" + " Nouvelle variable a renseigner :")
 
             if Blocs[n].entry2 == '':
                 userInput2 = simpledialog.askstring("Ajouter une valeur", "Borne inférieure :")
             elif Blocs[n].entry2 != '':
-                userInput2 = simpledialog.askinteger("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + ", Nouvelle Borne inférieure :")
+                userInput2 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry2 + "," + "\n" + "Nouvelle borne inférieure :")
 
             if Blocs[n].entry3 == '':
-                userInput3 = simpledialog.askinteger("Ajouter une valeur", "Borne supérieure :")
+                userInput3 = simpledialog.askstring("Ajouter une valeur", "Borne supérieure :")
             elif Blocs[n].entry3 != '':
-                userInput3 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry3 + ", Nouvelle Borne inférieure :")
+                userInput3 = simpledialog.askstring("Changer la valeur", "Valeur actuelle : " + Blocs[n].entry3 + "," + "\n" + " Nouvelle borne supérieure :")
 
-            if userInput1 == None: userInput3 = ''
-            if userInput2 == None: userInput3 = ''
+            if userInput1 == None: userInput1 = ''
+            if userInput2 == None: userInput2 = ''
             if userInput3 == None: userInput3 = ''
             Blocs[n].entry1 = userInput1
             Blocs[n].entry2 = userInput2
