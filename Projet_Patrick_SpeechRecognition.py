@@ -7,10 +7,7 @@ from PIL import ImageTk
 from screeninfo import get_monitors
 import speech_recognition as sr
 import win32com.client
-import requests
-from bs4 import BeautifulSoup
-import webbrowser
-import time
+
 
 
 
@@ -234,6 +231,7 @@ class Colision(threading.Thread):
         Mafenetre.quit()
 
     def stop(self):
+        reconnaissanceVocale.stop()
         self.running = False
 
 def ClicD(event):
@@ -416,38 +414,53 @@ def fullScreen():
 
 
 """-------- RECONNAISSANCE VOCALE --------"""
-def ecouteContinue() :
-    r = sr.Recognizer()
-    motCle = "Patrick"
-    entendu = -1
-    print('le mot clé est : ', motCle)
-    while entendu == -1 :
-        with sr.Microphone() as source :
-            try :
-                print("En attente")
-                audio = r.listen(source)
-            except sr.UnknownValueError and sr.RequestError as e :
-                print('')
-        try:
-            entendu = r.recognize_google(audio, language="fr-FR")
-            entendu = entendu.find("Patrick")
-        except sr.UnknownValueError :
-            print('')
-    r = sr.Recognizer()
-    global tache
-    with sr.Microphone() as source :
-        try :
-            print("Je vous écoute")
-            dire = threading.Thread(target=direQuelqueChose, args=("Je vous écoute",))  # crée un thread
-            dire.start()
-            audio = r.listen(source)
-        except sr.UnknownValueError and sr.RequestError as e:
-            pass
-    tache = r.recognize_google(audio, language="fr-FR")
+class reconnaissanceVocale(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
 
-def direQuelqueChose(phraseDire):
-    speaker = win32com.client.Dispatch("SAPI.SpVoice")
-    speaker.Speak(phraseDire)
+    def run(self):
+        self.running = True
+        while self.running == True :
+            r = sr.Recognizer()
+            motCle = "Patrick"
+            entendu = -1
+            print('le mot clé est : ', motCle)
+            while entendu == -1 :
+                with sr.Microphone() as source :
+                    try :
+                        print("En attente")
+                        audio = r.listen(source)
+                    except sr.UnknownValueError and sr.RequestError as e :
+                        print('')
+                try:
+                    entendu = r.recognize_google(audio, language="fr-FR")
+                    entendu = entendu.find("Patrick")
+                except sr.UnknownValueError :
+                    print('')
+            r = sr.Recognizer()
+            global tache
+            with sr.Microphone() as source :
+                try :
+                    print("Je vous écoute")
+                    dire = threading.Thread(target=self.direQuelqueChose, args=("Je vous écoute",))  # crée un thread
+                    dire.start()
+                    audio = r.listen(source)
+                except sr.UnknownValueError and sr.RequestError as e:
+                    pass
+            tache = r.recognize_google(audio, language="fr-FR")
+            self.ajouterBloc(tache)
+
+    def direQuelqueChose(self, phraseDire):
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        speaker.Speak(phraseDire)
+
+    def ajouterBloc(self, tache):
+        ajouterBloc = tache.find("stop")
+        if ajouterBloc != -1:
+            print('Ajouter Bloc')
+
+    def stop(self):
+        self.running = False
 
 
 """-------- CODE PRINCIPAL --------"""
@@ -542,6 +555,12 @@ Canevas.bind('<B1-Motion>',Drag) # événement bouton gauche enfoncé (hold down
 # Demarrage du thread de colision
 thColision = Colision()
 thColision.start()
+
+
+# Demarrage du thread de reconnaissance vocale
+thReconnaissanceVocale = reconnaissanceVocale()
+thReconnaissanceVocale.start()
+
 
 # Parametrage fenetre
 Mafenetre.iconphoto(False, PhotoImage(file='images/icone.png'))
