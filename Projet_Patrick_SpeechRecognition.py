@@ -335,7 +335,6 @@ def Executer():
     os.system("python " + path)
     os.system("del " + path)
 
-
 def Write(b):
     global tab
     global time
