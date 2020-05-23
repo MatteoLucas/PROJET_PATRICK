@@ -6,8 +6,11 @@ import os
 from PIL import ImageTk
 from screeninfo import get_monitors
 import speech_recognition as sr
-
-
+import win32com.client
+import requests
+from bs4 import BeautifulSoup
+import webbrowser
+import time
 
 
 
@@ -282,7 +285,7 @@ def Drag(event):
 
 
 
-"""-------- CREATION DES FONCTION POUR LE 'EXECUTION DU PROGRAMME --------"""
+"""-------- CREATION DES FONCTION POUR L'EXECUTION DU PROGRAMME --------"""
 def Save(executer):
     global f
     global tab
@@ -443,6 +446,7 @@ def ecouteContinue() :
     tache = r.recognize_google(audio, language="fr-FR")
 
 def direQuelqueChose(phraseDire):
+    speaker = win32com.client.Dispatch("SAPI.SpVoice")
     speaker.Speak(phraseDire)
 
 
