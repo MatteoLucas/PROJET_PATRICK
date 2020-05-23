@@ -2,6 +2,7 @@
 from tkinter import *
 import threading
 from tkinter import simpledialog
+from tkinter import filedialog
 import os
 from PIL import ImageTk
 from screeninfo import get_monitors
@@ -296,7 +297,24 @@ def Drag(event):
 
 
 """-------- CREATION DES FONCTION POUR L'EXECUTION DU PROGRAMME --------"""
-def Save(executer):
+def Save():
+    global f
+    global tab
+    global time
+    global random
+    path = filedialog.askdirectory()
+    f = open(path + "/monFichierPatricK.py", "w+")
+    o = ordre[0]
+    tab = 0
+    time = False
+    random = False
+    for i in o:
+        for b in Blocs:
+            if b.getGenId() == i:
+                Write(b)
+    f.close()
+
+def Executer():
     global f
     global tab
     global time
@@ -312,9 +330,11 @@ def Save(executer):
             if b.getGenId() == i:
                 Write(b)
     f.close()
-    if executer == True :
-        path = os.path.realpath("monFichierPatricK.py")
-        os.system("python " + path)
+
+    path = os.path.realpath("monFichierPatricK.py")
+    os.system("python " + path)
+    os.system("del " + path)
+
 
 def Write(b):
     global tab
@@ -359,6 +379,8 @@ def Write(b):
 
     elif b.id == 5:
         tab = tab - 1
+
+
 
 
 
@@ -471,7 +493,7 @@ class reconnaissanceVocale(threading.Thread):
 # Creation des variables
 speaker = win32com.client.Dispatch("SAPI.SpVoice")
 blocliste = (Input, If, Else, EndOfLoop, Print, For, While, Random, Variable, Delay)
-f = open("monFichierPatricK.py", "w+")
+
 tab = 0
 genId = 0
 fScreen = False
@@ -524,8 +546,8 @@ imgInput = ImageTk.PhotoImage(file ='images/bloc-input.png')
 menubar = Menu(Mafenetre)
 
 menu1 = Menu(menubar, tearoff=0)
-menu1.add_command(label='Exécuter', command=lambda: Save(True))
-menu1.add_command(label='Sauvegarder', command=lambda: Save(False))
+menu1.add_command(label='Exécuter', command= Executer)
+menu1.add_command(label='Sauvegarder', command= Save)
 menubar.add_cascade(label="Actions", menu=menu1)
 
 menu2 = Menu(menubar, tearoff=0)
