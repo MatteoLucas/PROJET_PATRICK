@@ -7,6 +7,7 @@ from PIL import ImageTk
 from screeninfo import get_monitors
 import speech_recognition as sr
 import win32com.client
+import time
 
 
 
@@ -28,7 +29,7 @@ class Print:
 
 class EndOfLoop:
     id = 5
-    recognition = "fin de boucle"
+    recognition = "fin"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -163,6 +164,7 @@ class Input:
 
 """-------- CREATION DES FONCTION POUR LE DEPLACEMENT DES BLOCS --------"""
 class Colision(threading.Thread):
+
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -239,6 +241,7 @@ class Colision(threading.Thread):
                 # Mise en memoire
             ordre = list(listeColision)
 
+        Mafenetre.quit()
 
     def stop(self):
         reconnaissanceVocale().stop()
@@ -425,67 +428,54 @@ def fullScreen():
 
 """-------- RECONNAISSANCE VOCALE --------"""
 class reconnaissanceVocale(threading.Thread):
+    running = True
+
     def __init__(self):
         threading.Thread.__init__(self)
 
     def run(self):
         global tache
-        self.running = True
-        while self.running == True :
-            r = sr.Recognizer()
-            motCle = "Patrick"
-            entendu = -1
-            print('le mot clé est : ', motCle)
-            while entendu == -1 and self.running == True :
-                with sr.Microphone() as source :
-                    try :
-                        if self.running == True:
-                            print("En attente")
-                            audio = r.listen(source)
-                    except sr.UnknownValueError and sr.RequestError as e :
-                        print('')
-                        if self.running == True :
-                            print('')
-                try:
-                    entendu = r.recognize_google(audio, language="fr-FR")
-                    entendu = entendu.find("Patrick")
-                except sr.UnknownValueError :
-                    print('')
 
+        appel = -1
+        r = sr.Recognizer()
+        while reconnaissanceVocale.running :
             with sr.Microphone() as source :
                 try :
-                    print("Je vous écoute")
-                    dire = threading.Thread(target=self.direQuelqueChose, args=("Je vous écoute",))  # crée un thread
-                    dire.start()
-                    audio = r.listen(source)
-                except sr.UnknownValueError and sr.RequestError as e:
+                    if reconnaissanceVocale.running == True:
+                        audio = r.listen(source)
+                except sr.UnknownValueError and sr.RequestError as e :
                     pass
-            tache = r.recognize_google(audio, language="fr-FR")
-            self.ajouterBloc(tache)
-        Mafenetre.quit()
+            try:
+                if reconnaissanceVocale.running == True:
+                    entendu = r.recognize_google(audio, language="fr-FR")
+                if entendu.find("Pat") != -1:
+                    self.ajouterBloc(entendu)
+                    entendu = ""
+
+            except sr.UnknownValueError:
+                print('')
 
     def direQuelqueChose(self, phraseDire):
         speaker = win32com.client.Dispatch("SAPI.SpVoice")
         speaker.Speak(phraseDire)
 
     def ajouterBloc(self, tache):
-        ajouterBloc = tache.find("ajouter un bloc")
-        if ajouterBloc != -1:
-            blocliste = (Input, If, Else, EndOfLoop, Print, For, While, Random, Variable, Delay)
+        if str(tache).find("bloc") != -1:
+
             for n in blocliste :
                 if tache.find(n.recognition) != -1 :
                     creationBloc(n())
-
-
-
+                    print('hello')
 
     def stop(self):
-        self.running = False
-        print('hello')
+        reconnaissanceVocale.running = False
+
+
 
 
 """-------- CODE PRINCIPAL --------"""
 # Creation des variables
+blocliste = (Input, If, Else, EndOfLoop, Print, For, While, Random, Variable, Delay)
 f = open("monFichierPatricK.py", "w+")
 tab = 0
 genId = 0
