@@ -16,6 +16,7 @@ class Print:
     id = 1
     entry = ""
     display = 'Valeur à afficher (entre "" pour string)'
+    recognition = "afficher"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -25,8 +26,9 @@ class Print:
     def getGenId(self):
         return self.bId
 
-class endOfLoop:
+class EndOfLoop:
     id = 5
+    recognition = "fin de boucle"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -38,6 +40,7 @@ class If:
     id = 2
     entry = ""
     display = "Condition à remplir (a == true)"
+    recognition = "si"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -49,6 +52,7 @@ class If:
 
 class Else:
     id = 3
+    recognition = "sinon"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -60,6 +64,7 @@ class While:
     id = 4
     entry = ""
     display = "Condition à remplir (a <= 4)"
+    recognition = "tant que"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -73,6 +78,7 @@ class For:
     id = 6
     entry = ""
     display = "Nombre de fois à répéter"
+    recognition = "répéter"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -86,6 +92,7 @@ class Variable:
     id = 7
     entry = ""
     display = "Directement retranscrit en python"
+    recognition = "variable"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -108,6 +115,7 @@ class Delay:
     id = 9
     entry = ""
     display = "Temps à attendre en secondes :"
+    recognition = "attendre"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -122,6 +130,7 @@ class Random:
     entry1 = ""
     entry2 = ""
     entry3 = ""
+    recognition = "aléatoire"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -139,6 +148,7 @@ class Input:
     id = 11
     entry = ""
     display = "Variable a renseigner :"
+    recognition = "saisir"
     def __init__(self):
         self.bId = genId
     def new(self):
@@ -228,10 +238,10 @@ class Colision(threading.Thread):
 
                 # Mise en memoire
             ordre = list(listeColision)
-        Mafenetre.quit()
+
 
     def stop(self):
-        reconnaissanceVocale.stop()
+        reconnaissanceVocale().stop()
         self.running = False
 
 def ClicD(event):
@@ -419,26 +429,29 @@ class reconnaissanceVocale(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        global tache
         self.running = True
         while self.running == True :
             r = sr.Recognizer()
             motCle = "Patrick"
             entendu = -1
             print('le mot clé est : ', motCle)
-            while entendu == -1 :
+            while entendu == -1 and self.running == True :
                 with sr.Microphone() as source :
                     try :
-                        print("En attente")
-                        audio = r.listen(source)
+                        if self.running == True:
+                            print("En attente")
+                            audio = r.listen(source)
                     except sr.UnknownValueError and sr.RequestError as e :
                         print('')
+                        if self.running == True :
+                            print('')
                 try:
                     entendu = r.recognize_google(audio, language="fr-FR")
                     entendu = entendu.find("Patrick")
                 except sr.UnknownValueError :
                     print('')
-            r = sr.Recognizer()
-            global tache
+
             with sr.Microphone() as source :
                 try :
                     print("Je vous écoute")
@@ -449,18 +462,26 @@ class reconnaissanceVocale(threading.Thread):
                     pass
             tache = r.recognize_google(audio, language="fr-FR")
             self.ajouterBloc(tache)
+        Mafenetre.quit()
 
     def direQuelqueChose(self, phraseDire):
         speaker = win32com.client.Dispatch("SAPI.SpVoice")
         speaker.Speak(phraseDire)
 
     def ajouterBloc(self, tache):
-        ajouterBloc = tache.find("stop")
+        ajouterBloc = tache.find("ajouter un bloc")
         if ajouterBloc != -1:
-            print('Ajouter Bloc')
+            blocliste = (Input, If, Else, EndOfLoop, Print, For, While, Random, Variable, Delay)
+            for n in blocliste :
+                if tache.find(n.recognition) != -1 :
+                    creationBloc(n())
+
+
+
 
     def stop(self):
         self.running = False
+        print('hello')
 
 
 """-------- CODE PRINCIPAL --------"""
@@ -526,7 +547,7 @@ menu2.add_command(label="Afficher", command=lambda: creationBloc(Print()))
 menu2.add_separator()
 menu2.add_command(label="Si", command=lambda: creationBloc(If()))
 menu2.add_command(label="Sinon", command=lambda: creationBloc(Else()))
-menu2.add_command(label='Fin de boucle', command=lambda: creationBloc(endOfLoop()))
+menu2.add_command(label='Fin de boucle', command=lambda: creationBloc(EndOfLoop()))
 menu2.add_command(label='Répéter', command=lambda: creationBloc(For()))
 menu2.add_command(label='Tant que', command=lambda: creationBloc(While()))
 menu2.add_separator()
