@@ -7,7 +7,6 @@ from PIL import ImageTk
 from screeninfo import get_monitors
 import speech_recognition as sr
 import win32com.client
-import time
 
 
 
@@ -462,7 +461,6 @@ class reconnaissanceVocale(threading.Thread):
                 elif entendu.find("valeur") != -1:
                     takeUserInput()
 
-
     def direQuelqueChose(self, phraseDire):
         speaker.Speak(phraseDire)
 
@@ -495,6 +493,7 @@ Mafenetre.title("Projet PatricK")
 # Création d'un widget Canvas
 Largeur = 800
 Hauteur = 800
+
 Canevas = Canvas(Mafenetre,width=Largeur,height=Hauteur,bg ='white')
 
 
