@@ -5,6 +5,8 @@ from tkinter import simpledialog
 import os
 from PIL import ImageTk
 from screeninfo import get_monitors
+import speech_recognition as sr
+
 
 
 
@@ -408,6 +410,40 @@ def fullScreen():
         Canevas.config(width= longueurEcran, height=hauteurEcran)
 
 
+
+
+"""-------- RECONNAISSANCE VOCALE --------"""
+def ecouteContinue() :
+    r = sr.Recognizer()
+    motCle = "Patrick"
+    entendu = -1
+    print('le mot clé est : ', motCle)
+    while entendu == -1 :
+        with sr.Microphone() as source :
+            try :
+                print("En attente")
+                audio = r.listen(source)
+            except sr.UnknownValueError and sr.RequestError as e :
+                print('')
+        try:
+            entendu = r.recognize_google(audio, language="fr-FR")
+            entendu = entendu.find("Patrick")
+        except sr.UnknownValueError :
+            print('')
+    r = sr.Recognizer()
+    global tache
+    with sr.Microphone() as source :
+        try :
+            print("Je vous écoute")
+            dire = threading.Thread(target=direQuelqueChose, args=("Je vous écoute",))  # crée un thread
+            dire.start()
+            audio = r.listen(source)
+        except sr.UnknownValueError and sr.RequestError as e:
+            pass
+    tache = r.recognize_google(audio, language="fr-FR")
+
+def direQuelqueChose(phraseDire):
+    speaker.Speak(phraseDire)
 
 
 """-------- CODE PRINCIPAL --------"""
