@@ -382,8 +382,6 @@ def Write(b):
 
 
 
-
-
 """-------- CREATION DES FONCTION POUR LES BOUTONS --------"""
 def takeUserInput():
     for n in range(0, nbCarre):
@@ -434,7 +432,8 @@ def fullScreen():
         fScreen = False
         Mafenetre.attributes('-fullscreen', False)
         Canevas.config(width=Largeur, height=Hauteur)
-        Canevas.coords(1, 300, 0)
+        for i in range(0, len(ordre[0])):
+            Canevas.coords(ordre[0][i] +1, 400 - L / 2, 35 - H / 2 + i * H - 6 * i)
 
     elif fScreen == False:
         fScreen = True
@@ -464,19 +463,19 @@ class reconnaissanceVocale(threading.Thread):
                 entendu = r.recognize_google(audio, language="fr-FR")
             except sr.UnknownValueError:
                 pass
-            if entendu.find("Pat") != -1:
+            if entendu.find("Pat") != -1 and reconnaissanceVocale.running == True:
                 print(entendu)
-                if entendu.find("bloc") != -1:
+                if entendu.find("bloc") != -1 and reconnaissanceVocale.running == True:
                     for n in blocliste :
                         if entendu.find(n.recognition) != -1 and reconnaissanceVocale.running == True:
                             creationBloc(n())
-                elif entendu.find("sauvegarde") != -1:
-                    Save(False)
-                elif entendu.find("exécute") != -1:
-                    Save(True)
-                elif entendu.find("écran") != -1:
+                elif entendu.find("sauvegarde") != -1 and reconnaissanceVocale.running == True:
+                    Save()
+                elif entendu.find("exécute") != -1 and reconnaissanceVocale.running == True:
+                    Executer()
+                elif entendu.find("écran") != -1 and reconnaissanceVocale.running == True:
                     fullScreen()
-                elif entendu.find("valeur") != -1:
+                elif entendu.find("valeur") != -1 and reconnaissanceVocale.running == True:
                     takeUserInput()
 
     def direQuelqueChose(self, phraseDire):
@@ -593,7 +592,6 @@ thReconnaissanceVocale.start()
 # Parametrage fenetre
 Mafenetre.iconphoto(False, PhotoImage(file='images/icone.png'))
 Mafenetre.protocol('WM_DELETE_WINDOW', thColision.stop)
-Mafenetre.protocol('WM_SIZE_MAXIMIZED', fullScreen)
 Canevas.focus_set()
 Canevas.pack(padx=10,pady=10)
 
