@@ -417,6 +417,7 @@ def fullScreen():
         fScreen = False
         Mafenetre.attributes('-fullscreen', False)
         Canevas.config(width=Largeur, height=Hauteur)
+        Canevas.coords(1, 300, 0)
 
     elif fScreen == False:
         fScreen = True
@@ -436,6 +437,7 @@ class reconnaissanceVocale(threading.Thread):
     def run(self):
         r = sr.Recognizer()
         while reconnaissanceVocale.running :
+            entendu = ''
             with sr.Microphone() as source :
                 try :
                     audio = r.listen(source)
@@ -443,23 +445,26 @@ class reconnaissanceVocale(threading.Thread):
                     pass
             try:
                 entendu = r.recognize_google(audio, language="fr-FR")
-                if entendu.find("Pat") != -1:
-                    self.ajouterBloc(entendu)
-
             except sr.UnknownValueError:
-                print('')
+                pass
+            if entendu.find("Pat") != -1:
+                print(entendu)
+                if entendu.find("bloc") != -1:
+                    for n in blocliste :
+                        if entendu.find(n.recognition) != -1 and reconnaissanceVocale.running == True:
+                            creationBloc(n())
+                elif entendu.find("sauvegarde") != -1:
+                    Save(False)
+                elif entendu.find("exécute") != -1:
+                    Save(True)
+                elif entendu.find("écran") != -1:
+                    fullScreen()
+                elif entendu.find("valeur") != -1:
+                    takeUserInput()
+
 
     def direQuelqueChose(self, phraseDire):
-        speaker = win32com.client.Dispatch("SAPI.SpVoice")
         speaker.Speak(phraseDire)
-
-    def ajouterBloc(self, tache):
-        if str(tache).find("bloc") != -1:
-
-            for n in blocliste :
-                if tache.find(n.recognition) != -1 :
-                    creationBloc(n())
-                    print('hello')
 
     def stop(self):
         reconnaissanceVocale.running = False
@@ -469,6 +474,7 @@ class reconnaissanceVocale(threading.Thread):
 
 """-------- CODE PRINCIPAL --------"""
 # Creation des variables
+speaker = win32com.client.Dispatch("SAPI.SpVoice")
 blocliste = (Input, If, Else, EndOfLoop, Print, For, While, Random, Variable, Delay)
 f = open("monFichierPatricK.py", "w+")
 tab = 0
