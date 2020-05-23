@@ -465,17 +465,17 @@ class reconnaissanceVocale(threading.Thread):
                 pass
             if entendu.find("Pat") != -1 and reconnaissanceVocale.running == True:
                 print(entendu)
-                if entendu.find("bloc") != -1 and reconnaissanceVocale.running == True:
+                if entendu.find("bloc") != -1:
                     for n in blocliste :
-                        if entendu.find(n.recognition) != -1 and reconnaissanceVocale.running == True:
+                        if entendu.find(n.recognition) != -1:
                             creationBloc(n())
-                elif entendu.find("sauvegarde") != -1 and reconnaissanceVocale.running == True:
+                elif entendu.find("sauvegarde") != -1:
                     Save()
-                elif entendu.find("exécute") != -1 and reconnaissanceVocale.running == True:
+                elif entendu.find("exécute") != -1:
                     Executer()
-                elif entendu.find("écran") != -1 and reconnaissanceVocale.running == True:
+                elif entendu.find("écran") != -1:
                     fullScreen()
-                elif entendu.find("valeur") != -1 and reconnaissanceVocale.running == True:
+                elif entendu.find("valeur") != -1:
                     takeUserInput()
 
     def direQuelqueChose(self, phraseDire):
