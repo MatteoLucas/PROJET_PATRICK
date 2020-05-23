@@ -434,23 +434,17 @@ class reconnaissanceVocale(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        global tache
-
-        appel = -1
         r = sr.Recognizer()
         while reconnaissanceVocale.running :
             with sr.Microphone() as source :
                 try :
-                    if reconnaissanceVocale.running == True:
-                        audio = r.listen(source)
+                    audio = r.listen(source)
                 except sr.UnknownValueError and sr.RequestError as e :
                     pass
             try:
-                if reconnaissanceVocale.running == True:
-                    entendu = r.recognize_google(audio, language="fr-FR")
+                entendu = r.recognize_google(audio, language="fr-FR")
                 if entendu.find("Pat") != -1:
                     self.ajouterBloc(entendu)
-                    entendu = ""
 
             except sr.UnknownValueError:
                 print('')
