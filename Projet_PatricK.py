@@ -300,7 +300,11 @@ def Save(executer):
     f.close()
     if executer == True :
         path = os.path.realpath("monFichierPatricK.py")
-        os.system("python "+ path)
+        if sys.platform == 'linux' :
+            os.system("python3 "+ path)
+        else :
+            os.system("python " + path)
+
 
 def Write(b):
     global tab
