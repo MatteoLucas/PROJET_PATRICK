@@ -464,7 +464,6 @@ class reconnaissanceVocale(threading.Thread):
             except sr.UnknownValueError:
                 pass
             if entendu.find("Pat") != -1 and reconnaissanceVocale.running == True:
-                print(entendu)
                 if entendu.find("bloc") != -1:
                     for n in blocliste :
                         if entendu.find(n.recognition) != -1:
